@@ -124,20 +124,20 @@ class HuobiRestAPI {
       )
       .then((res) => {
         if (res.status !== 200) {
-          throw res;
+          return Promise.reject(res);
         }
         return res.data;
       })
       .then((data) => {
         if (path.indexOf('/v2') === 0) {
-          const success = data.ok;
+          const success = data.ok || data.success;
           if (!success) {
-            throw data;
+            return Promise.reject(data);
           }
         } else {
           const status = data.status.toLowerCase();
           if (status !== STATUS.OK) {
-            throw data;
+            return Promise.reject(data);
           }
         }
         return data;
